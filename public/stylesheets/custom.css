@@ -111,3 +111,20 @@ footer nav {
   float: none;
 }
 
+/* User show page */
+table.profile {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+td.sidebar {
+	width: 30%;
+	padding: 1em;
+	vertical-align: top;
+	background: #ffc;
+}
+
+.profile img.gravatar {
+	border: 1px solid #aaa;
+	margin-bottom: -15px;
+}
