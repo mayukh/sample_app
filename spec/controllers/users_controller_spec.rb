@@ -8,7 +8,7 @@ describe UsersController do
    before(:each) do  
     @user = Factory(:user)
    end
-    
+   
    it "should be successful" do
      get :show, :id => @user  #Need a user id for testing the show method
      response.should be_success
@@ -41,9 +41,8 @@ describe UsersController do
      get :show, :id => @user
      response.should have_selector('td>a', :content => user_path(@user),
                                            :href    => user_path(@user))
-   end
-  
-  end
+   end 
+  end #GET 'show'
   
   describe "GET 'new'" do
     it "should be successful" do
@@ -55,9 +54,8 @@ describe UsersController do
         get :new
         response.should have_selector("title",
         :content => "Sign up")
-     end
-    
-  end
+     end  
+  end #GET 'new'
   
   describe "POST 'create'" do
     
@@ -104,22 +102,110 @@ describe UsersController do
          end.should change(User, :count).by(1 )
         end
          
-            it "should have a welcome message" do
-              post :create, :user => @attr
-              flash[:success].should =~ /Welcome to the sample app/i
-            end
+        it "should have a welcome message" do
+          post :create, :user => @attr
+          flash[:success].should =~ /Welcome to the sample app/i
+        end
             
-            it "should sign the user in" do
-              post :create, :user => @attr
-              controller.should be_signed_in
-            end
-       
-       
-       
-       
-       
-       
+        it "should sign the user in" do
+          post :create, :user => @attr
+          controller.should be_signed_in
+        end     
+     end #success
+  end #POST create
+  
+  
+   describe "GET 'edit'" do
+    before(:each) do
+     @user = test_sign_in(Factory(:user))
+    end
+    
+    it "should be successful" do
+      get :edit, :id => @user
+      response.should be_success
+    end
+    
+    it "should have the right title" do
+      get :edit, :id => @user
+      response.should have_selector('title', :content => "Edit user")
+    end
+    
+    it "should have a link to change the gravatar" do
+      get :edit, :id => @user
+      response.should have_selector('a', :href => 'http://gravatar.com/emails', 
+                                         :content => "Change")
+    end
+  
+   end #GET edit block
+   ############
+   describe "PUT 'update'" do
+     
+     before(:each) do
+       @user = Factory(:user)
+       test_sign_in(@user)
      end
-  end
+
+      describe "failure" do
+
+        before(:each) do
+          @user 
+          @attr = {:name => "", :email => "", :password => "",
+                   :password_confirmation => ""}
+        end
+
+        it "should have the right title" do
+          put :update, :id => @user , :user => @attr
+          response.should have_selector('title', :content => "Edit user")
+        end
+
+        it "should render the 'edit' page" do
+          put :update, :id => @user , :user => @attr
+          response.should render_template('edit')
+        end
+        # 
+        #  it "should not create a user" do
+        #   lambda do
+        #     post :create, :user => @attr
+        #   end.should_not change(User, :count)
+        #  end
+
+      end #failure
+
+      describe "success" do
+
+        before(:each) do
+          @attr = {:name => "New User", :email => "user@example.com",
+                   :password => "foobar", :password_confirmation => "foobar"}
+        end
+
+         it "should change the user attributes" do
+                        #current user, #new user info
+           put :update, :id => @user , :user => @attr
+           updated_user = assigns(:user) #binds @user form the controller is mapped to 
+           @user.reload                  #reloads the just saved user from the database
+           @user.name.should == updated_user.name
+           @user.email.should == updated_user.email
+           @user.encrypted_password.should == updated_user.encrypted_password
+           #response.should redirect_to(user_path(assigns(:user)))
+         end
+         # 
+         # it "should create a user" do
+         #  lambda do
+         #    post :create, :user => @attr
+         #  end.should change(User, :count).by(1 )
+         # end
+         # 
+         it "should have a flash message" do
+           put :update, :user => @attr, :id => @user
+           flash[:notice].should =~ /updated/i
+         end
+         # 
+         # it "should sign the user in" do
+         #   post :create, :user => @attr
+         #   controller.should be_signed_in
+         # end     
+      end #success
+   end #POST create
+   ############
 
 end
