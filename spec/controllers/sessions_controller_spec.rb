@@ -42,6 +42,28 @@ describe SessionsController do
         end
        
       end #failure
+      
+      describe "success" do
+        before(:each) do
+          @user = Factory(:user)
+          @attr = {:email => @user.email, :password => @user.password }
+        end
+        
+        it "should sign the user in " do
+          post :create, :session => @attr
+          # current_user attached to the sessions controller should 
+          #== user posted to the session resource?
+          controller.current_user.should == @user
+          #Implies we need to have a signed_in? method in controller
+          controller.should be_signed_in
+        end
+        
+        it "should redirect to the user show page" do
+          post :create, :session => @attr
+          response.should redirect_to(user_path(@user))
+        end
+      end #success
+      
     end #POST
 
 end
