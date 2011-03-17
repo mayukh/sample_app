@@ -32,9 +32,27 @@ module SessionsHelper
     current_user = nil
   end
   
+  def current_user?(user)
+    user == current_user
+  end
+  
   
   def deny_access
+    store_location  #we want to come back here if we were trying to access some secure area
     redirect_to signin_path, :notice => "Please Sign in."
+  end
+  
+  def store_location
+    session[:return_to] = request.fullpath  #Store it in a browser cookie
+  end
+  
+  def redirect_back_or(default)
+    redirect_to (session[:return_to] || default)  #redirect to saved location or user_path(@user)?  
+    clear_return_to
+  end
+  
+  def clear_return_to
+    session[:return_to] = nil
   end
   
   private 
