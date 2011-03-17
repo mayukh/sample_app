@@ -197,7 +197,7 @@ describe UsersController do
          # 
          it "should have a flash message" do
            put :update, :user => @attr, :id => @user
-           flash[:notice].should =~ /updated/i
+           flash[:success].should =~ /updated/i
          end
          # 
          # it "should sign the user in" do
@@ -207,5 +207,25 @@ describe UsersController do
       end #success
    end #POST create
    ############
+   
+   describe "authentication of edit/update actions" do
+     
+    before(:each) do
+      @user = Factory(:user)
+    end
+    
+    it "should deny access to 'edit' without signin" do
+      get :edit, :id => @user
+      response.should redirect_to(signin_path)
+      flash[:notice].should =~ /sign in/i
+    end
+    
+    it "should deny access to 'update' without signin" do
+      put :update, :user => {}, :id => @user
+      response.should redirect_to(signin_path)
+      flash[:notice].should =~ /sign in/i
+    end
+   
+   end
 
 end
