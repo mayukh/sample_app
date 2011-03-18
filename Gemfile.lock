@@ -105,4 +105,4 @@ DEPENDENCIES
   rspec-rails (= 2.5.0)
   sqlite3-ruby (= 1.2.5)
   webrat (= 0.7.1)
-  will_paginate (= 3.0.pre)
+  will_paginate
