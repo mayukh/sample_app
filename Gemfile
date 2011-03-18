@@ -11,7 +11,7 @@ gem 'sqlite3-ruby', '1.2.5', :require => 'sqlite3'
 # Use gravatar for user profile images
 gem 'gravatar_image_tag', '1.0.0'
 
-gem 'will_paginate', '3.0.pre'
+gem 'will_paginate' #, '3.0.pre'
 # Use unicorn as the web server
 # gem 'unicorn'
 
