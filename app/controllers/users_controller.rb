@@ -58,9 +58,7 @@ class UsersController < ApplicationController
   end
   
   private 
-  def authenticate
-   deny_access unless signed_in?
-  end
+
   
   def correct_user
     @user = User.find(params[:id])  #pull out the user from the resource we are trying to access

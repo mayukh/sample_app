@@ -2,6 +2,9 @@ module SessionsHelper
 #by default these helpers are available in the views
 #to have these in the controller access them in ApplicationController
 
+  def authenticate
+   deny_access unless signed_in?
+  end
 
   def sign_in(user)
     cookies.permanent.signed[:remember_token] = [user.id, user.salt] 
