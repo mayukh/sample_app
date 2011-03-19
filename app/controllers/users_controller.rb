@@ -1,15 +1,17 @@
 class UsersController < ApplicationController
   before_filter :authenticate, :only => [:edit,:update,:index, :destroy]
   before_filter :correct_user, :only => [:edit,:update]
-  before_filter :admin_user,    :only => [:destroy]
+  before_filter :admin_user,   :only => [:destroy]
    
   def index
-    @users = User.paginate(:page => params[:page])
+    @users = User.paginate(:page => params[:page])  #using this for pagination instead of each
     @title = "Users"
   end
   
   def show
     @user = User.find(params[:id])
+#   @microposts = @user.microposts
+    @microposts = @user.microposts.paginate(:page => params[:page])
     @title = @user.name
   end
   

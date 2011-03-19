@@ -72,7 +72,16 @@ describe UsersController do
   describe "GET 'show'" do
     
    before(:each) do  
-    @user = Factory(:user)
+     @user = Factory(:user)
+
+     # @user = test_sign_in(Factory(:user))
+     # Factory(:user, :email => "another@example.com")
+     # Factory(:user, :email => "another@example.net")
+     #    
+     # 51.times do 
+     #   Factory(:user, :email => Factory.next(:email))
+     # end
+
    end
    
    it "should be successful" do
@@ -108,6 +117,26 @@ describe UsersController do
      response.should have_selector('td>a', :content => user_path(@user),
                                            :href    => user_path(@user))
    end 
+   
+   it "should show the user's microposts" do
+     mp1 = Factory(:micropost, :user => @user, :content => "Foo bar")
+     mp2 = Factory(:micropost, :user => @user, :content => "Quack Quack")
+     get :show, :id => @user
+     response.should have_selector('span.content', :content => mp1.content)
+     response.should have_selector('span.content', :content => mp2.content)
+     
+   end
+   
+    it "should paginate microposts" do
+       31.times { Factory(:micropost, :user => @user, :content => "Foo bar") }
+       get :show, :id => @user
+       response.should have_selector('div.pagination')
+       # response.should have_selector('span.disabled', :content => "Previous")
+       # response.should have_selector('a', :href => "/users?page=2",
+       #                                    :content => "2")
+    
+    end
+   
   end #GET 'show'
   
   describe "GET 'new'" do
